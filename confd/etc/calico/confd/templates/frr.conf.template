@@ -1,0 +1,10 @@
+hostname {{ .frr.hostname }}
+log file {{ .frr.log_file }}
+
+router bgp {{ .frr.bgp_as }}
+ bgp router-id {{ .frr.bgp_router_id }}
+{{- range .frr.bgp_networks }}
+ network {{ . }}
+{{- end }}
+
+line vty
