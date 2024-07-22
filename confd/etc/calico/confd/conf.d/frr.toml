@@ -2,8 +2,6 @@
 src = "frr.conf.template"
 dest = "/etc/frr/frr.cfg"
 prefix = "/calico/"
-keys = [
-    "/frr",
-]
+keys = ["/frr"]
 check_cmd = "/usr/lib/frr/frr-reload.py --test"
 reload_cmd = "usr/lib/frr/frr-reload.py --reload"
