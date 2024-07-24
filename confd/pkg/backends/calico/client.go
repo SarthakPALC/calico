@@ -514,7 +514,7 @@ func (c *client) updatePeersV1() {
 		// already have a global peering to that IP, skip emitting the node-specific
 		// one.
 		if nodeKey, ok := key.(model.NodeBGPPeerKey); ok {
-			globalKey := model.GlobalBGPPeerKey{PeerIP: nodeKey.PeerIP, Interface: nodeKey.Interface, Port: nodeKey.Port}
+			globalKey := model.GlobalBGPPeerKey{PeerIP: nodeKey.PeerIP, PeerInterface: nodeKey.PeerInterface, Port: nodeKey.Port}
 			globalPath, _ := model.KeyToDefaultPath(globalKey)
 			if _, ok = peersV1[globalPath]; ok {
 				log.Debug("Global peering already exists")
@@ -637,7 +637,7 @@ func (c *client) updatePeersV1() {
 				} else {
 					for _, localNodeName := range localNodeNames {
 						log.Debugf("Local node name: %#v", localNodeName)
-						key := model.NodeBGPPeerKey{Nodename: localNodeName, PeerIP: peer.PeerIP, Interface: peer.Interface, Port: peer.Port}
+						key := model.NodeBGPPeerKey{Nodename: localNodeName, PeerIP: peer.PeerIP, PeerInterface: peer.PeerInterface, Port: peer.Port}
 						emit(key, peer)
 					}
 				}
@@ -704,7 +704,7 @@ func (c *client) updatePeersV1() {
 
 		for _, peer := range peers {
 			for _, localNodeName := range localNodeNames {
-				key := model.NodeBGPPeerKey{Nodename: localNodeName, PeerIP: peer.PeerIP, Interface: peer.Interface, Port: peer.Port}
+				key := model.NodeBGPPeerKey{Nodename: localNodeName, PeerIP: peer.PeerIP, PeerInterface: peer.PeerInterface, Port: peer.Port}
 				emit(key, peer)
 			}
 		}

@@ -69,6 +69,8 @@ type BGPPeerSpec struct {
 	// +optional
 	PeerIP string `json:"peerIP,omitempty" validate:"omitempty,IP:port"`
 
+	// PeerInterface
+	PeerInterface string `json:"peerInterface,omitempty" validate:"omitempty"`
 	// The AS Number of the peer.
 	// +optional
 	ASNumber numorstring.ASNumber `json:"asNumber,omitempty"`
