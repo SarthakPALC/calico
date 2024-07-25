@@ -148,6 +148,7 @@ func NewCalicoClient(confdConfig *config.Config) (*client, error) {
 		nodeListenPorts:         make(map[string]uint16),
 		globalBGPConfig:         cfg,
 		nodeIPs:                 make(map[string]struct{}),
+		nodeInterfaces:          make(map[string]string),
 		programmedRouteRefCount: make(map[string]int),
 
 		// Track which routes we have sent, and which we have not. We need maps for
@@ -298,6 +299,7 @@ type client struct {
 	globalListenPort uint16
 	nodeListenPorts  map[string]uint16
 	nodeIPs          map[string]struct{}
+	nodeInterfaces   map[string]string
 
 	// The route generator
 	rg *routeGenerator
@@ -452,6 +454,7 @@ func (c *client) OnSyncChange(source string, ready bool) {
 
 type bgpPeer struct {
 	PeerIP          cnet.IP              `json:"ip"`
+	PeerInterface   string               `json:"interface"`
 	ASNum           numorstring.ASNumber `json:"as_num,string"`
 	RRClusterID     string               `json:"rr_cluster_id"`
 	Password        *string              `json:"password"`
@@ -514,7 +517,7 @@ func (c *client) updatePeersV1() {
 		// already have a global peering to that IP, skip emitting the node-specific
 		// one.
 		if nodeKey, ok := key.(model.NodeBGPPeerKey); ok {
-			globalKey := model.GlobalBGPPeerKey{PeerIP: nodeKey.PeerIP, Port: nodeKey.Port}
+			globalKey := model.GlobalBGPPeerKey{PeerIP: nodeKey.PeerIP, PeerInterface: nodeKey.PeerInterface, Port: nodeKey.Port}
 			globalPath, _ := model.KeyToDefaultPath(globalKey)
 			if _, ok = peersV1[globalPath]; ok {
 				log.Debug("Global peering already exists")
@@ -637,7 +640,7 @@ func (c *client) updatePeersV1() {
 				} else {
 					for _, localNodeName := range localNodeNames {
 						log.Debugf("Local node name: %#v", localNodeName)
-						key := model.NodeBGPPeerKey{Nodename: localNodeName, PeerIP: peer.PeerIP, Port: peer.Port}
+						key := model.NodeBGPPeerKey{Nodename: localNodeName, PeerIP: peer.PeerIP, PeerInterface: peer.PeerInterface, Port: peer.Port}
 						emit(key, peer)
 					}
 				}
@@ -704,7 +707,7 @@ func (c *client) updatePeersV1() {
 
 		for _, peer := range peers {
 			for _, localNodeName := range localNodeNames {
-				key := model.NodeBGPPeerKey{Nodename: localNodeName, PeerIP: peer.PeerIP, Port: peer.Port}
+				key := model.NodeBGPPeerKey{Nodename: localNodeName, PeerIP: peer.PeerIP, PeerInterface: peer.PeerInterface, Port: peer.Port}
 				emit(key, peer)
 			}
 		}

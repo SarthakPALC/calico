@@ -40,6 +40,7 @@ var (
 type NodeBGPPeerKey struct {
 	Nodename string `json:"-" validate:"omitempty"`
 	PeerIP   net.IP `json:"-" validate:"required"`
+	PeerInterface string `json:"-" validate:"omitempty"`
 	Port     uint16 `json:"-" validate:"omitempty"`
 }
 
@@ -74,6 +75,7 @@ func (key NodeBGPPeerKey) String() string {
 type NodeBGPPeerListOptions struct {
 	Nodename string
 	PeerIP   net.IP
+	PeerInterface string
 	Port     uint16
 }
 
@@ -125,6 +127,7 @@ func (options NodeBGPPeerListOptions) KeyFromDefaultPath(path string) Key {
 
 type GlobalBGPPeerKey struct {
 	PeerIP net.IP `json:"-" validate:"required"`
+	PeerInterface string `json:"-" validate:"omitempty"`
 	Port   uint16 `json:"-" validate:"omitempty"`
 }
 
