@@ -148,6 +148,7 @@ func NewCalicoClient(confdConfig *config.Config) (*client, error) {
 		nodeListenPorts:         make(map[string]uint16),
 		globalBGPConfig:         cfg,
 		nodeIPs:                 make(map[string]struct{}),
+		nodeInterfaces:          make(map[string]string),
 		programmedRouteRefCount: make(map[string]int),
 
 		// Track which routes we have sent, and which we have not. We need maps for
@@ -298,6 +299,7 @@ type client struct {
 	globalListenPort uint16
 	nodeListenPorts  map[string]uint16
 	nodeIPs          map[string]struct{}
+	nodeInterfaces   map[string]string
 
 	// The route generator
 	rg *routeGenerator

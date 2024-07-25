@@ -51,7 +51,7 @@ func (c *bgpNodeUpdateProcessor) Process(kvp *model.KVPair) ([]*model.KVPair, er
 
 	// Extract the separate bits of BGP config - these are stored as separate keys in the
 	// v1 model.  For a delete these will all be nil.
-	var asNum, ipv4, netv4, ipv6, netv6, rrClusterID interface{}
+	var asNum, ipv4, netv4, ipv6, intrfc, netv6, rrClusterID interface{}
 	var node *libapiv3.Node
 	var ok bool
 	if kvp.Value != nil {
@@ -67,6 +67,7 @@ func (c *bgpNodeUpdateProcessor) Process(kvp *model.KVPair) ([]*model.KVPair, er
 		// Return the first error that was hit.
 		ipv4 = ""
 		ipv6 = ""
+		intrfce = ""
 		rrClusterID = ""
 		if bgp := node.Spec.BGP; bgp != nil {
 			if len(bgp.IPv4Address) != 0 {
@@ -107,6 +108,14 @@ func (c *bgpNodeUpdateProcessor) Process(kvp *model.KVPair) ([]*model.KVPair, er
 			Key: model.NodeBGPConfigKey{
 				Nodename: name,
 				Name:     "ip_addr_v6",
+			},
+			Value:    ipv6,
+			Revision: kvp.Revision,
+		},
+		{
+			Key: model.NodeBGPConfigKey{
+				Nodename: name,
+				Name:     "interface_v6",
 			},
 			Value:    ipv6,
 			Revision: kvp.Revision,
