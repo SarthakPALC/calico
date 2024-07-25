@@ -452,6 +452,7 @@ func (c *client) OnSyncChange(source string, ready bool) {
 
 type bgpPeer struct {
 	PeerIP          cnet.IP              `json:"ip"`
+	PeerInterface   string               `json:"interface"`
 	ASNum           numorstring.ASNumber `json:"as_num,string"`
 	RRClusterID     string               `json:"rr_cluster_id"`
 	Password        *string              `json:"password"`
